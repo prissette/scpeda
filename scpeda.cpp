@@ -78,37 +78,32 @@ for (int i=0; i<20; i++)
 vector<double> P(20);
 for (int i=0; i<20; i++)
 	P[i]=0.5;
-// decision to open (1) or not (0) each warehouse
-/*
- vector<int> X(20);
-for (int i=0; i<20; i++)
-	X[i]=(rand()%4==0)?1:0;
-	
-cout << fitness(A,O,X) << endl;
-*/
 
-
-
+/* ***********************
+ *      THE BIG LOOP     *
+ * ***********************/
+for(;;)
+{{
 //--------------------------------------------------------
-vector<int> X[100];
+vector<int> X[1000];
 
 
-for (int i=0; i<100; i++)
+for (int i=0; i<1000; i++)
 	{
 	X[i].resize(20);
 	for (int j=0;j<20;j++)
 		{
-		X[i][j]=(rand()%4==0)?1:0;
+		X[i][j]=(rand()%1000000<P[j]*1000000)?1:0;
 		cout << X[i][j];
 		}
 	cout << " " << fitness(A,O,X[i]) << endl;		
 	}
 
-
-partial_sort(X,X+10,X+100,cmp_fitness);
+// partial sort, keep the 10 best vectors
+partial_sort(X,X+10,X+1000,cmp_fitness);
 cout <<"-------------------------------------------"<<endl;
 
-for (int i=0; i<100; i++)
+for (int i=0; i<10; i++)
 	{
 	for (int j=0;j<20;j++)
 		{
@@ -118,6 +113,20 @@ for (int i=0; i<100; i++)
 	}
 
 
+vector<double> P2(20);
 
+for (int i=0; i<20; i++)
+	{
+	P2[i]=0;
+	for(int j=0;j<10;j++)
+		P2[i]+=X[j][i];
+	P2[i]/=10;
+	
+	cout << P2[i] << " ";
+	}
 
+for (int i=0; i<20; i++)
+	P[i]=0.9*P[i]+0.1*P2[i];
+}}
+	
 }
